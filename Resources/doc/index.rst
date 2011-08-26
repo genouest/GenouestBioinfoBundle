@@ -2,7 +2,7 @@
 Overview
 ========
 
-This bundle contains some useful utils to manipulate bioinformatics data (fasta sequences for example.
+This bundle contains some useful utils to manipulate bioinformatics data (fasta sequences for example).
 
 
 How does it work?
@@ -11,8 +11,6 @@ How does it work?
 This bundle contains some validator constraints for fasta sequences.
 It also add some useful twig extensions.
 
-
-.. _installation-label:
 Installation
 ------------
 
@@ -46,8 +44,7 @@ No specific configuration is needed for this bundle.
 Customization
 -------------
 
-Fasta validation
-~~~~~~~~~~~~~~~~
+### Fasta validation
 
 This bundle comes with specific Constraints to validate fasta sequences in a form.
 You can use them like this:
@@ -66,8 +63,7 @@ In this example, PROT_OR_ADN can be replaced by ADN, PROT or PROSITE depending o
 The Genouest\Bundle\BioinfoBundle\Constraints\FastaFileValidator extends Symfony\Component\Validator\Constraints\FileValidator, so you can use the same
 validation options with it (maxSize in this example).
 
-Twig extensions
-~~~~~~~~~~~~~~~
+### Twig extensions
 
 The following filters are available with this bundle:
 
