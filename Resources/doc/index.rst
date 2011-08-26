@@ -1,6 +1,5 @@
-========
-Overview
-========
+GenouestBioinfoBundle
+=====================
 
 This bundle contains some useful utils to manipulate bioinformatics data (fasta sequences for example).
 
@@ -14,11 +13,13 @@ It also add some useful twig extensions.
 Installation
 ------------
 
-Checkout a copy of the bundle code::
+Checkout a copy of the bundle code:
 
     git submodule add git@github.com:genouest/GenouestBioinfoBundle.git vendor/bundles/Genouest/Bundle/BioinfoBundle
     
-Then register the bundle with your kernel::
+Then register the bundle with your kernel:
+
+.. code-block:: php
 
     // in AppKernel::registerBundles()
     $bundles = array(
@@ -27,7 +28,9 @@ Then register the bundle with your kernel::
         // ...
     );
 
-Make sure that you also register the namespaces with the autoloader::
+Make sure that you also register the namespaces with the autoloader:
+
+.. code-block:: php
 
     // app/autoload.php
     $loader->registerNamespaces(array(
@@ -44,10 +47,13 @@ No specific configuration is needed for this bundle.
 Customization
 -------------
 
-### Fasta validation
+Fasta validation
+~~~~~~~~~~~~~~~~
 
 This bundle comes with specific Constraints to validate fasta sequences in a form.
 You can use them like this:
+
+.. code-block:: php
 
     /**
      * @Genouest\Bundle\BioinfoBundle\Constraints\Fasta(seqType = "PROT_OR_ADN")
@@ -63,9 +69,12 @@ In this example, PROT_OR_ADN can be replaced by ADN, PROT or PROSITE depending o
 The Genouest\Bundle\BioinfoBundle\Constraints\FastaFileValidator extends Symfony\Component\Validator\Constraints\FileValidator, so you can use the same
 validation options with it (maxSize in this example).
 
-### Twig extensions
+Twig extensions
+~~~~~~~~~~~~~~~
 
 The following filters are available with this bundle:
+
+.. code-block:: text
 
     yourStr|split(',') will split your string with the ',' delimiter
     yourStr|truncate(6, '...') will truncate your string at the 6th character and add the '...' suffix
