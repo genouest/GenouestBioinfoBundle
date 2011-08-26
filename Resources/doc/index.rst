@@ -67,8 +67,8 @@ validation options with it (maxSize in this example).
 
 The following filters are available with this bundle:
 
-yourStr|split(',') will split your string with the ',' delimiter
-yourStr|truncate(',') will 
-yourStr|startsWith('foo') returns true if yourStr starts with 'foo'
-yourStr|endsWith('bar') returns true if yourStr ends with 'bar'
+    yourStr|split(',') will split your string with the ',' delimiter
+    yourStr|truncate(',') will 
+    yourStr|startsWith('foo') returns true if yourStr starts with 'foo'
+    yourStr|endsWith('bar') returns true if yourStr ends with 'bar'
 
