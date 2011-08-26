@@ -3,7 +3,6 @@ GenouestBioinfoBundle
 
 This bundle contains some useful utils to manipulate bioinformatics data (fasta sequences for example).
 
-
 How does it work?
 -----------------
 
