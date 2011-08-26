@@ -68,7 +68,7 @@ validation options with it (maxSize in this example).
 The following filters are available with this bundle:
 
     yourStr|split(',') will split your string with the ',' delimiter
-    yourStr|truncate(',') will 
+    yourStr|truncate(6, '...') will truncate your string at the 6th character and add the '...' suffix
     yourStr|startsWith('foo') returns true if yourStr starts with 'foo'
     yourStr|endsWith('bar') returns true if yourStr ends with 'bar'
 
