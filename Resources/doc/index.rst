@@ -16,7 +16,7 @@ Installation
 
 Checkout a copy of the bundle code::
 
-    git submodule add gitolite@chili.genouest.org:sf2-bioinfobundle vendor/bundles/Genouest/Bundle/BioinfoBundle
+    git submodule add git@github.com:genouest/GenouestBioinfoBundle.git vendor/bundles/Genouest/Bundle/BioinfoBundle
     
 Then register the bundle with your kernel::
 
