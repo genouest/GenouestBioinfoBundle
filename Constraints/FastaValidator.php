@@ -35,11 +35,14 @@ class FastaValidator extends ConstraintValidator
         
         $qualifiedSeqType = self::$seqTypes[$constraint->seqType];
         
+        if ($constraint->multiple)
+            $qualifiedSeqType |= SequenceUtils::CHECK_MULTIPLE;
+        
         $seqUtils = new SequenceUtils();
         $seqError = $seqUtils->checkSequence($value, SequenceUtils::CHECK_WORD | $qualifiedSeqType, true);
         
         if (!empty($seqError)) {
-            $this->setMessage($constraint->message);
+            $this->setMessage($constraint->message.' ('.$seqError.')');
             
             return false;
         }

@@ -29,6 +29,10 @@ class FastaFileValidator extends FileValidator
         
         if (!empty($value)) {
             $qualifiedSeqType = self::$seqTypes[$constraint->seqType];
+
+            if ($constraint->multiple)
+                $qualifiedSeqType |= SequenceUtils::CHECK_MULTIPLE;
+
             $seqUtils = new SequenceUtils();
             $seqError = $seqUtils->checkSequenceFromFile($value->getRealPath(), SequenceUtils::CHECK_WORD | $qualifiedSeqType, true);
 

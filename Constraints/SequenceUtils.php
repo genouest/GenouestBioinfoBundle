@@ -20,6 +20,7 @@ class SequenceUtils {
     const CHECK_ADN                 = 0x08;
     const CHECK_PROTEIC             = 0x10;
     const CHECK_PROTEIC_OR_ADN      = 0x20;
+    const CHECK_MULTIPLE            = 0x40;
 
     private $adnChars = array('a','t','c','g','n','u','r','y','A','T','C','G','N','U','R','Y',"\n","\t","\s",' ');
     private $strictProteinChars = array('N','D','E','F','H','I','K','L','M','P','Q','R','S','V','W','Y','d','e','f','h','i','k','l','m','n','p','q','r','s','v','w','y');
@@ -122,7 +123,7 @@ class SequenceUtils {
         $sequence = $this->dos2Unix($sequence);
         $seqLines = explode("\n", $sequence);
 
-        $foundDef = false; // Did we found a '>' in the sequence?
+        $foundDef = 0; // Did we found a '>' in the sequence?
         // Check every line
         foreach ($seqLines as $line) {
             $posDef = strpos($line, '>');
@@ -141,14 +142,15 @@ class SequenceUtils {
                     }
                 }
             }
-            else if ($posDef !== false) {
-                $foundDef = true;
-            }
+            else if ($posDef !== false)
+                $foundDef++;
         }
         
-        if (($rule & SequenceUtils::CHECK_FASTA) && !$foundDef) {
+        if (($rule & SequenceUtils::CHECK_FASTA) && !$foundDef)
             return "Fasta definition line is missing (line begining by '>').";
-        }
+
+        if (($rule & SequenceUtils::CHECK_MULTIPLE) && $foundDef <= 1)
+            return "Multiple sequences are needed.";
 
         return ""; // No errors, the sequence match the rules
     }
