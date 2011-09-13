@@ -17,7 +17,6 @@ class SequenceUtils {
 
     const CHECK_WORD                = 0x01;
     const CHECK_FASTA               = 0x02;
-    const CHECK_PROSITE             = 0x04;
     const CHECK_ADN                 = 0x08;
     const CHECK_PROTEIC             = 0x10;
     const CHECK_PROTEIC_OR_ADN      = 0x20;
@@ -26,8 +25,6 @@ class SequenceUtils {
     private $strictProteinChars = array('N','D','E','F','H','I','K','L','M','P','Q','R','S','V','W','Y','d','e','f','h','i','k','l','m','n','p','q','r','s','v','w','y');
     private $proteinChars = array('A','C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','V','W','Y','B','Z','X','*',
                                 'a','c','d','e','f','g','h','i','k','l','m','n','p','q','r','s','t','v','w','y','b','z','x',"\n","\t","\s",' ');
-    private $prositeChars = array('-','[',']','(',')','{','}','x',',','>','<','1','2','3','4','5','6','7','8','9','0','A','C','D','E','F','G','H','I','K','L',
-                                'M','N','P','Q','R','S','T','V','W','Y','a','c','d','e','f','g','h','i','k','l','m','n','p','q','r','s','t','v','w','y',"\n");
     private $wordChars = array('ÿ','Ð','Ï','à','±','þ');
 
     /**
@@ -133,10 +130,7 @@ class SequenceUtils {
                 $lineChars = str_split($line);
                 // Check every char from the current line
                 foreach ($lineChars as $char) {
-                    if (($rule & SequenceUtils::CHECK_PROSITE) && !in_array($char, $this->prositeChars)) {
-                        return $char." is not allowed in prosite format.";
-                    }
-                    else if (($rule & SequenceUtils::CHECK_ADN) && !in_array($char, $this->adnChars)) {
+                    if (($rule & SequenceUtils::CHECK_ADN) && !in_array($char, $this->adnChars)) {
                         return "'".$char."'"." is not allowed in nucleic format.";
                     }
                     else if (($rule & SequenceUtils::CHECK_PROTEIC) && !in_array($char, $this->proteinChars)) {

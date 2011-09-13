@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraint;
 /** @Annotation */
 class Fasta extends Constraint
 {
-    static protected $seqTypes = array('ADN', 'PROT', 'PROT_OR_ADN', 'PROSITE');
+    static protected $seqTypes = array('ADN', 'PROT', 'PROT_OR_ADN');
     
     public $seqType = 'ADN';
     public $message = 'This is not a valid Fasta sequence';

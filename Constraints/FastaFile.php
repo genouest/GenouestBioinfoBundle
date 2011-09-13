@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Constraints\File;
 /** @Annotation */
 class FastaFile extends File
 {
-    static protected $seqTypes = array('ADN', 'PROT', 'PROT_OR_ADN', 'PROSITE');
+    static protected $seqTypes = array('ADN', 'PROT', 'PROT_OR_ADN');
     
     public $seqType = 'ADN';
     public $badFastaMessage = 'The file is not a valid Fasta file';

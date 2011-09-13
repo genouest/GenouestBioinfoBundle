@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
 
 class FastaFileValidator extends FileValidator
 {
-    static protected $seqTypes = array('ADN' => SequenceUtils::CHECK_ADN, 'PROT' => SequenceUtils::CHECK_PROTEIC, 'PROT_OR_ADN' => SequenceUtils::CHECK_PROTEIC_OR_ADN, 'PROSITE' => SequenceUtils::CHECK_PROSITE);
+    static protected $seqTypes = array('ADN' => SequenceUtils::CHECK_ADN, 'PROT' => SequenceUtils::CHECK_PROTEIC, 'PROT_OR_ADN' => SequenceUtils::CHECK_PROTEIC_OR_ADN);
     
     
     public function isValid($value, Constraint $constraint)
