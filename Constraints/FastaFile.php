@@ -22,6 +22,7 @@ class FastaFile extends File
     static protected $seqTypes = array('ADN', 'PROT', 'PROT_OR_ADN');
     
     public $seqType = 'ADN';
+    public $multiple = false;
     public $badFastaMessage = 'The file is not a valid Fasta file';
 
     /**
