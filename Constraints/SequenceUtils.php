@@ -22,11 +22,9 @@ class SequenceUtils {
     const CHECK_PROTEIC_OR_ADN      = 0x20;
     const CHECK_MULTIPLE            = 0x40;
 
-    private $adnChars = array('a','t','c','g','n','u','r','y','A','T','C','G','N','U','R','Y',"\n","\t","\s",' ');
-    private $strictProteinChars = array('N','D','E','F','H','I','K','L','M','P','Q','R','S','V','W','Y','d','e','f','h','i','k','l','m','n','p','q','r','s','v','w','y');
-    private $proteinChars = array('A','C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','V','W','Y','B','Z','X','*',
-                                'a','c','d','e','f','g','h','i','k','l','m','n','p','q','r','s','t','v','w','y','b','z','x',"\n","\t","\s",' ');
-    private $wordChars = array('ÿ','Ð','Ï','à','±','þ');
+    private $adnChars = 'ATGCUNRYatgcunry';
+    private $proteinChars = 'ABCDEFGHIKLMNPQRSTVWYZXabcdefghiklmnpqrstvwyzx\*';
+    private $wordChars = 'ÿÐÏà±þ';
 
     /**
      * Converts a text from dos (or mac before OSX) to unix carriage returns
@@ -35,10 +33,8 @@ class SequenceUtils {
      * @returns The text converted
      **/
     public function dos2Unix($string) {
-        $order   = array("\r\n", "\r");
-        $replace = "\n";
         // Processes \r\n's first so they aren't converted twice.
-        return str_replace($order, $replace, $string);
+        return str_replace(array("\r\n", "\r"), "\n", $string);
     }
 
     /**
@@ -48,9 +44,7 @@ class SequenceUtils {
      * @returns The text converted
      **/
     public function formatSequence($string) {
-        $res = $this->dos2Unix($string);
-        $res .= "\n";
-        return $res;
+        return $this->dos2Unix($string)."\n";
     }
 
     /**
@@ -99,58 +93,43 @@ class SequenceUtils {
      * @returns An error message if case of failure, an empty string otherwise.
      **/
     public function checkSequence($sequence, $rule = SequenceUtils::CHECK_WORD) {
-        $seqLines =  preg_split('/[\r\n]+/', $sequence, -1, PREG_SPLIT_NO_EMPTY);
         
         if ($rule & SequenceUtils::CHECK_WORD) {
-            foreach ($seqLines as $line) {
-                if (preg_match('/^\{\\\\rtf/', $line)) {
-                    // This is an RTF file
-                    return "This is not a valid text file.";
-                }
-                if (!empty($line) && (strpos($line, '>') === false)) {
-                    $lineChars = str_split($line);
-                    foreach ($lineChars as $char) {
-                        if (in_array($char, $this->wordChars)) {
-                            // This is a word-like file
-                            return "This is not a valid text file.";
-                        }
-                    }
-                }
-            }
+            if (strpos($sequence, "{\\rtf") !== false)
+                return "This is not a valid text file.";
+
+            if (preg_match('/.*['.$this->wordChars.'].*/', $sequence)) // Find a line with unauthorized char but no '>' at the start
+                return "This is not a valid text file.";
         }
         
-        // Ensure the file is proper unix file
+        if (($rule & SequenceUtils::CHECK_FASTA) || ($rule & SequenceUtils::CHECK_MULTIPLE)) {
+            $seqNumber = substr_count($sequence, '>');
+            
+            if (($rule & SequenceUtils::CHECK_FASTA) && $seqNumber <= 0)
+                return "Fasta definition line is missing (line begining by '>').";
+            
+            $lineBreakNumber = substr_count($sequence, "\n") + substr_count($sequence, "\r");
+            
+            if (($rule & SequenceUtils::CHECK_FASTA) && $lineBreakNumber <= 0)
+                return "Wrong Fasta format.";
+
+            if (($rule & SequenceUtils::CHECK_MULTIPLE) && $seqNumber <= 1)
+                return "Multiple sequences are needed.";
+        }
+        
+        // Ensure the file is a proper unix file
         $sequence = $this->dos2Unix($sequence);
-        $seqLines = explode("\n", $sequence);
-
-        $foundDef = 0; // Did we found a '>' in the sequence?
-        // Check every line
-        foreach ($seqLines as $line) {
-            $posDef = strpos($line, '>');
-            if (!empty($line) && ($posDef === FALSE)) {
-                $lineChars = str_split($line);
-                // Check every char from the current line
-                foreach ($lineChars as $char) {
-                    if (($rule & SequenceUtils::CHECK_ADN) && !in_array($char, $this->adnChars)) {
-                        return "'".$char."'"." is not allowed in nucleic format.";
-                    }
-                    else if (($rule & SequenceUtils::CHECK_PROTEIC) && !in_array($char, $this->proteinChars)) {
-                        return "'".$char."'"." is not allowed in proteic sequence.";
-                    }
-                    else if (($rule & SequenceUtils::CHECK_PROTEIC_OR_ADN) && !in_array($char, $this->adnChars) && !in_array($char, $this->proteinChars)) {
-                        return "Could not determine sequence type.";
-                    }
-                }
-            }
-            else if ($posDef !== false)
-                $foundDef++;
-        }
         
-        if (($rule & SequenceUtils::CHECK_FASTA) && !$foundDef)
-            return "Fasta definition line is missing (line begining by '>').";
-
-        if (($rule & SequenceUtils::CHECK_MULTIPLE) && $foundDef <= 1)
-            return "Multiple sequences are needed.";
+        // Find a line with unauthorized char but no '>' at the start
+        // 'm' modifier = search on every line
+        // allow \n or \r chars as the line splitting does not remove both on dos files
+        
+        if (($rule & SequenceUtils::CHECK_ADN) && preg_match('/^[^>].*[^'.$this->adnChars.'\\r\\n]+.*$/m', $sequence))
+            return "Not a nucleic sequence.";
+        if (($rule & SequenceUtils::CHECK_PROTEIC) && preg_match('/^[^>].*[^'.$this->proteinChars.'\\r\\n]+.*$/m', $sequence))
+            return "Not a proteic sequence.";
+        if (($rule & SequenceUtils::CHECK_PROTEIC_OR_ADN) && preg_match('/^[^>].*[^'.$this->adnChars.$this->proteinChars.'\\r\\n]+.*$/m', $sequence))
+            return "Bad sequence format";
 
         return ""; // No errors, the sequence match the rules
     }

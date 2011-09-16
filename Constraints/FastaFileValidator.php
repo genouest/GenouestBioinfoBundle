@@ -37,7 +37,7 @@ class FastaFileValidator extends FileValidator
             $seqError = $seqUtils->checkSequenceFromFile($value->getRealPath(), SequenceUtils::CHECK_WORD | $qualifiedSeqType, true);
 
             if(!empty($seqError)) {
-                $this->setMessage($constraint->badFastaMessage);
+                $this->setMessage($constraint->badFastaMessage.' ('.$seqError.')');
                 
                 return false;
             }
