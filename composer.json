@@ -1,7 +1,7 @@
 {
     "name": "genouest/bioinfo-bundle",
     "description": "This bundle contains some useful utils to manipulate bioinformatics data (fasta sequences for example).",
-    "keywords": ["genouest"],
+    "keywords": ["genouest", "bioinfo"],
     "type": "symfony-bundle",
     "license": "MIT",
     "authors": [
