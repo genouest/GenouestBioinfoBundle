@@ -22,10 +22,9 @@ class FastaFileValidator extends FileValidator
     static protected $seqTypes = array('ADN' => SequenceUtils::CHECK_ADN, 'PROT' => SequenceUtils::CHECK_PROTEIC, 'PROT_OR_ADN' => SequenceUtils::CHECK_PROTEIC_OR_ADN);
     
     
-    public function isValid($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint)
     {
-        if (!parent::isValid($value, $constraint))
-            return false;
+        parent::validate($value, $constraint);
         
         if (!empty($value)) {
             $qualifiedSeqType = self::$seqTypes[$constraint->seqType];
@@ -37,12 +36,12 @@ class FastaFileValidator extends FileValidator
             $seqError = $seqUtils->checkSequenceFromFile($value->getRealPath(), SequenceUtils::CHECK_WORD | $qualifiedSeqType, true);
 
             if(!empty($seqError)) {
-                $this->setMessage($constraint->badFastaMessage.' ('.$seqError.')');
+                $this->context->addViolation($constraint->badFastaMessage.' ('.$seqError.')', array(
+                    '{{ value }}' => $value,
+                ));
                 
-                return false;
+                return;
             }
         }
-        
-        return true;
     }
 }

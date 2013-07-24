@@ -21,17 +21,17 @@ class FastaValidator extends ConstraintValidator
 {
     static protected $seqTypes = array('ADN' => SequenceUtils::CHECK_ADN, 'PROT' => SequenceUtils::CHECK_PROTEIC, 'PROT_OR_ADN' => SequenceUtils::CHECK_PROTEIC_OR_ADN);
 
-    public function isValid($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint)
     {
         if (null === $value || '' === $value) {
-            return true;
+            return;
         }
 
         if (!is_scalar($value) && !(is_object($value) && method_exists($value, '__toString()'))) {
             throw new UnexpectedTypeException($value, 'string');
         }
 
-        $value = (string)$value;
+        $value = (string) $value;
         
         $qualifiedSeqType = self::$seqTypes[$constraint->seqType];
         
@@ -42,11 +42,11 @@ class FastaValidator extends ConstraintValidator
         $seqError = $seqUtils->checkSequence($value, SequenceUtils::CHECK_WORD | $qualifiedSeqType, true);
         
         if (!empty($seqError)) {
-            $this->setMessage($constraint->message.' ('.$seqError.')');
+            $this->context->addViolation($constraint->message.' ('.$seqError.')', array(
+                '{{ value }}' => $value,
+            ));
             
-            return false;
+            return;
         }
-
-        return true;
     }
 }
