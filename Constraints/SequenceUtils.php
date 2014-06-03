@@ -30,7 +30,7 @@ class SequenceUtils {
      * Converts a text from dos (or mac before OSX) to unix carriage returns
      *
      * @param string The text to convert
-     * @returns The text converted
+     * @return The text converted
      **/
     public function dos2Unix($string) {
         // Processes \r\n's first so they aren't converted twice.
@@ -41,7 +41,7 @@ class SequenceUtils {
      * Ensure the text is a correct unix text with \n and a final \n
      *
      * @param string The text to convert
-     * @returns The text converted
+     * @return The text converted
      **/
     public function formatSequence($string) {
         return $this->dos2Unix($string)."\n";
@@ -53,7 +53,7 @@ class SequenceUtils {
      * @param sequence The file path containing the sequence to check
      * @param rule The formats to check (CHECK_*, see the const at the beginning of this file)
      * @param doFormat Ensure the file contains only unix line returns. This will modify the original file!
-     * @returns An error message if case of failure, an empty string otherwise.
+     * @return An error message if case of failure, an empty string otherwise.
      **/
     public function checkSequenceFromFile($seqPath, $rule = SequenceUtils::CHECK_WORD, $doFormat = true) {
         $seqFile = fopen( $seqPath, "r" );
@@ -90,7 +90,7 @@ class SequenceUtils {
      *
      * @param sequence The sequence to check
      * @param rule The formats to check (CHECK_*, see the const at the beginning of this file)
-     * @returns An error message if case of failure, an empty string otherwise.
+     * @return An error message if case of failure, an empty string otherwise.
      **/
     public function checkSequence($sequence, $rule = SequenceUtils::CHECK_WORD) {
         
